@@ -1,37 +1,38 @@
 from tkinter import *
+import math
 
 
-def res(num):
-    inx = int(len(input_number.get()) / 2 + len(input_number.get()) % 2)
-    s_num = str(num)
-    l_1 = sum([int(s_num[i]) for i in range(len(s_num[:inx]))])
-    l_2 = sum([int(s_num[i + len(s_num[:inx])]) for i in range(len(s_num[inx:len(input_number.get())]))])
-    label_first_sum['text'] = l_1
-    label_second_sum['text'] = l_2
-    if l_1 > l_2:
-        label_comp_sign['text'] = '>'
-    elif l_1 < l_2:
-        label_comp_sign['text'] = '<'
-    else:
-        label_comp_sign['text'] = '='
+def get_sums(number_string):
+    shift = math.ceil(len(number_string) / 2.)  # число символов до середины (левая половина в приоритете)
+    left_sum = sum(map(int, number_string[:shift]))  # суммируем от первого символа до "середины"
+    right_sum = sum(map(int, number_string[shift:]))  # суммируем от "середины" до конца
+    return left_sum, right_sum
 
 
 def process_input(event):
-    if 20 >= len(input_number.get()) > 1:
-        try:
-            num = int(input_number.get())
+    number_string = input_number.get()  # получаем строковое представление числа
+    if not number_string.isdigit():  # если не число
+        label_prompt['text'] = '!!! Ошибка ввода !!!\nВведите целое (натуральное) число'
+        label_prompt['fg'] = 'red'
+        label_input_reminder['text'] = ""
+    else:  # если число
+        if 1 < len(number_string) <= 20:  # если длина числа больше 1 и меньше 20
             label_prompt['text'] = 'Введите целое (натуральное) число\n'
             label_prompt['fg'] = 'black'
-            label_input_reminder['text'] = f"Вы ввели: {num}"
-            res(num)
-        except ValueError:
-            print('bcs2')
-            label_prompt['text'] = '!!! Ошибка ввода !!!\nВведите целое (натуральное) число'
-            label_prompt['fg'] = 'red'
-            label_input_reminder['text'] = ""
-    else:
-        label_prompt['text'] = 'Введите целое (натуральное) число\nсодержащее более 2-х цифр'
-        label_prompt['fg'] = 'blue'
+            label_input_reminder['text'] = f"Вы ввели: {number_string}"
+            left_sum, right_sum = get_sums(number_string)  # получаем левую и правую суммы половин
+            label_first_sum['text'] = left_sum
+            label_second_sum['text'] = right_sum
+            # определяем знак сравнения сумм
+            if left_sum > right_sum:
+                label_comp_sign['text'] = '>'
+            elif left_sum < right_sum:
+                label_comp_sign['text'] = '<'
+            else:
+                label_comp_sign['text'] = '='
+        else:  # если цифра или число > чем 20-ти значное
+            label_prompt['text'] = 'Введите целое (натуральное) число\nсодержащее более 2-х цифр'
+            label_prompt['fg'] = 'blue'
 
 
 root = Tk()
