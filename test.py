@@ -1,75 +1,77 @@
 from tkinter import *
 
+
 def res(num):
-    inx = int(len(ent.get())/2 + len(ent.get())%2)
+    inx = int(len(input_number.get()) / 2 + len(input_number.get()) % 2)
     s_num = str(num)
     l_1 = sum([int(s_num[i]) for i in range(len(s_num[:inx]))])
-    l_2 = sum([int(s_num[i + len(s_num[:inx])])\
-               for i in range(len(s_num[inx:len(ent.get())]))])
-    label_6['text'] = l_1
-    label_8['text'] = l_2
+    l_2 = sum([int(s_num[i + len(s_num[:inx])]) for i in range(len(s_num[inx:len(input_number.get())]))])
+    label_first_sum['text'] = l_1
+    label_second_sum['text'] = l_2
     if l_1 > l_2:
-        label_7['text'] = '>'
+        label_comp_sign['text'] = '>'
     elif l_1 < l_2:
-        label_7['text'] = '<'
+        label_comp_sign['text'] = '<'
     else:
-        label_7['text'] = '='
+        label_comp_sign['text'] = '='
 
-def pr(event):
 
-    if 20 >= len(ent.get()) > 1:
-        try: 
-            num = int(ent.get())
-            label_2['text'] = 'Введите целое (натуральное) число\n'
-            label_2['fg'] = 'black'
-            label_3['text'] = f"Вы ввели: {num}"
+def process_input(event):
+    if 20 >= len(input_number.get()) > 1:
+        try:
+            num = int(input_number.get())
+            label_prompt['text'] = 'Введите целое (натуральное) число\n'
+            label_prompt['fg'] = 'black'
+            label_input_reminder['text'] = f"Вы ввели: {num}"
             res(num)
-        except Exception:
+        except ValueError:
             print('bcs2')
-            label_2['text'] = '!!! Ошибка ввода !!!\n\
-Введите целое (натуральное) число'
-            label_2['fg'] = 'red'
-            label_3['text'] = ""
+            label_prompt['text'] = '!!! Ошибка ввода !!!\nВведите целое (натуральное) число'
+            label_prompt['fg'] = 'red'
+            label_input_reminder['text'] = ""
     else:
-        label_2['text'] = 'Введите целое (натуральное) число\n\
-содержащее более 2-х цифр'
-        label_2['fg'] = 'blue'
+        label_prompt['text'] = 'Введите целое (натуральное) число\nсодержащее более 2-х цифр'
+        label_prompt['fg'] = 'blue'
+
 
 root = Tk()
 root.geometry('400x200+20+20')
 root.resizable(False, False)
 
-label_1 = Label(text = '--- Сравним сумму первой половины числа\
-со второй ---')
-label_2 = Label(text = 'Введите целое (натуральное) число\n',\
-                font = 'Arial 12 bold')
-label_3 = Label()
+label_title = Label(text='--- Сравним сумму первой половины числасо второй ---')
+label_prompt = Label(text='Введите целое (натуральное) число\n', font='Arial 12 bold')
+label_input_reminder = Label()
+
 frame = Frame()
 frame_2 = Frame()
-label_4 = Label(frame, text = 'Сумма первой половины числа')
-label_5 = Label(frame, text = 'Сумма второй половины числа')
-label_6 = Label(frame_2, text ='', font = 'Arial 12 bold')
-label_7 = Label(frame_2, text ='', font = 'Arial 12 bold')
-label_8 = Label(frame_2, text ='', font = 'Arial 12 bold')
-ent = Entry(width = 20)
-ent.focus_set()
-but = Button(text = 'OK')
 
-but.bind('<Button-1>', pr)
-but.bind('<Return>', pr)
-ent.bind('<Return>', pr)
+label_first_sum_title = Label(frame, text='Сумма первой половины числа')
+label_second_sum_title = Label(frame, text='Сумма второй половины числа')
 
-label_1.pack()
-label_2.pack()
-ent.pack(pady = 5)
-but.pack()
-label_3.pack()
+label_first_sum = Label(frame_2, text='', font='Arial 12 bold')
+label_comp_sign = Label(frame_2, text='', font='Arial 12 bold')  # знак сравнения (<, >, =)
+label_second_sum = Label(frame_2, text='', font='Arial 12 bold')
+
+input_number = Entry(width=20)
+input_number.focus_set()
+
+ok_button = Button(text='OK')
+ok_button.bind('<Button-1>', process_input)
+ok_button.bind('<Return>', process_input)
+
+input_number.bind('<Return>', process_input)
+
+label_title.pack()
+label_prompt.pack()
+input_number.pack(pady=5)
+ok_button.pack()
+label_input_reminder.pack()
 frame.pack()
-label_4.pack(side = 'left', padx = 5)
-label_5.pack(padx = 5)
+label_first_sum_title.pack(side='left', padx=5)
+label_second_sum_title.pack(padx=5)
 frame_2.pack()
-label_6.pack(side = 'left', padx = 25)
-label_7.pack(side = 'left', padx = 25)
-label_8.pack(padx = 25)
+label_first_sum.pack(side='left', padx=25)
+label_comp_sign.pack(side='left', padx=25)
+label_second_sum.pack(padx=25)
 
 root.mainloop()
